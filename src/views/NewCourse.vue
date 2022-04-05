@@ -30,6 +30,7 @@
                   type="text"
                   name="name"
                   id="name"
+                  required
                   autocomplete="name"
                   v-model="course.name"
                   class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
@@ -213,14 +214,33 @@ export default {
       }
     },
     async submit() {
-      const { data, error } = await this.$supabase
+      if (this.course.name === '') {
+        this.snack('Whoops! ! you forgot the course name');
+      } 
+      else if (this.course.teacher === ''){
+          this.snack('you must enter the name of the teacher');
+      }
+      else if (this.course.start_at === ''){
+          this.snack('You must indicate the start date of the course');
+      }
+      else if (this.course.end_at === ''){
+          this.snack('you must indicate the end date of the course');
+      }
+      else if (this.course.description === ''){
+          this.snack('Whoops! a description is missing');
+      }
+      else {
+        
+
+        const { data, error } = await this.$supabase
         .from('courses')
         .insert(this.course);
-      if (data) {
+        if (data) {
         this.snack('Course successfully added !');
         this.goTo('home');
-      } else {
-        this.snack(error);
+        } else {
+          this.snack(error);
+        }
       }
     },
 
